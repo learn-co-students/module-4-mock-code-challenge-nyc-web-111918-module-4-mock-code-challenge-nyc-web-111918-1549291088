@@ -1,11 +1,11 @@
 import React, { Fragment } from 'react'
 
 
-const Sushi = ({sushiData, handleOnEatenSushiClick }) => {
+const Sushi = ({sushiData, handleOnEatenSushiClick, balance }) => {
   return (
     <div className="sushi">
       <div className="plate"
-           onClick={() => handleOnEatenSushiClick(sushiData.id)}>
+           onClick={balance >= sushiData.price ? () => handleOnEatenSushiClick(sushiData.id) : null}>
         {
             <img src={sushiData.img_url} width="100%" />
         }

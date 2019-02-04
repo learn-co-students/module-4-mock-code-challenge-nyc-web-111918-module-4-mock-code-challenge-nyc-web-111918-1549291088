@@ -4,9 +4,9 @@ import Table from './containers/Table';
 
 // Endpoint!
 const API = "http://localhost:3000/sushis"
-
-let start
-let end
+//
+// let start
+// let end
 
 class App extends Component {
 
@@ -37,9 +37,16 @@ handleOnMoreSushiClick = () => {
   fetch(API)
   .then(resp => resp.json())
   .then(sushis => {
-    let fourSushis = sushis.slice(this.state.start, this.state.end)
-    console.log(fourSushis)
-    this.setState({ sushis: fourSushis })
+    if (this.state.start < 100) {
+      let fourSushis = sushis.slice(this.state.start, this.state.end)
+      console.log(fourSushis)
+      this.setState({ sushis: fourSushis })
+    } else {
+      this.setState({
+        start: 0,
+        end: 4
+      })
+    }
   })
 }
 
@@ -48,20 +55,15 @@ handleOnEatenSushiClick = (sushiId) => {
     if (sushi.id !== sushiId) {
       return sushi
     }
-    if (this.state.balance > sushi.price) {
+    if (this.state.balance >= sushi.price) {
       this.setState({
         balance: this.state.balance - sushi.price,
         emptyPlates: [...this.state.emptyPlates, sushi]
       })
       return ''
-    } else {
-      window.alert("You do not have enough money for that.  Would you like to add money to you balance?")
-      this.setState({
-        balance: 100
-      }, () => console.log(this.state.balance))
-    }
+    } 
   })
-  this.setState({ sushis }, () => console.log(this.state.sushis.length))
+  this.setState({ sushis })
 }
 
 handleOnMoreMoneyClick = (e) => {
@@ -79,7 +81,8 @@ handleOnMoreMoneyClick = (e) => {
           sushis={this.state.sushis}
           handleOnMoreSushiClick={this.handleOnMoreSushiClick}
           handleOnEatenSushiClick={this.handleOnEatenSushiClick}
-          handleOnMoreMoneyClick={this.handleOnMoreMoneyClick}/>
+          handleOnMoreMoneyClick={this.handleOnMoreMoneyClick}
+          balance={this.state.balance}/>
         <Table balance={this.state.balance} emptyPlates={this.state.emptyPlates}/>
       </div>
     );
